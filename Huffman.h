@@ -3,10 +3,13 @@
 
 #include <iostream>
 #include <string>
+#include <stdlib.h>
 
 struct charElement{
     char c;
     int freq;
+    charElement* left = NULL;
+    charElement* right = NULL;
 };
 
 struct huffmanList{
@@ -18,12 +21,19 @@ class Huffman{
 
 private:
     huffmanList chs;
-
+    charElement *huffmanTree = (charElement*) malloc(sizeof(charElement));
 public:
+    /** Initializing the list */
     Huffman();
+    /** Building the Huffman Tree */
     void buildHuffmanTree(std::string text);
-    void createArray(std::string text);
-    void sortArray();
+    /** Inserting nodes in the tree */
+    charElement* insertNode(charElement* left, charElement* right);
+    /** Creating the list of appearing characters */
+    void createList(std::string text);
+    /** Insertion sort the list in decreasing order */
+    void sortList();
+    /** See how is the list; Might be useless later, therefore deleted */
     void showList();
 };
 

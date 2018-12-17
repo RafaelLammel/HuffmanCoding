@@ -2,6 +2,7 @@
 
 using namespace std;
 
+/** Initializing the list */
 Huffman::Huffman()
 {
     chs.n = 0;
@@ -9,13 +10,41 @@ Huffman::Huffman()
         chs.element[i].freq = 0;
 }
 
+/** Building the Huffman Tree */
 void Huffman::buildHuffmanTree(string text)
 {
-    createArray(text);
-    sortArray();
+    charElement *aux;
+    createList(text);
+    sortList();
+    while(chs.n > 2)
+    {
+        aux = insertNode(&chs.element[chs.n-2],&chs.element[chs.n-1]);
+        chs.element[chs.n-1] = *aux;
+        sortList();
+        chs.n--;
+    }
+    huffmanTree = insertNode(&chs.element[chs.n-1],&chs.element[chs.n-2]);
+    while(huffmanTree != NULL)
+    {
+        cout << huffmanTree->freq << endl;
+        huffmanTree = huffmanTree->left;
+    }
 }
 
-void Huffman::createArray(string text)
+/** Inserting nodes in the tree */
+charElement* Huffman::insertNode(charElement* left, charElement* right)
+{
+    charElement* a;
+    a = (charElement*) malloc(sizeof(charElement));
+    a->c = 0;
+    a->freq = left->freq + right->freq;
+    a->left = left;
+    a->right = right;
+    return a;
+}
+
+/** Creating the list of appearing characters */
+void Huffman::createList(string text)
 {
     bool inTheList;
     for(int i = 0; i < text.size(); i++)
@@ -39,7 +68,8 @@ void Huffman::createArray(string text)
     }
 }
 
-void Huffman::sortArray()
+/** Insertion sort the list in decreasing order */
+void Huffman::sortList()
 {
     charElement chosen;
     int j;
@@ -56,6 +86,7 @@ void Huffman::sortArray()
     }
 }
 
+/** See how is the list; Might be useless later, therefore deleted */
 void Huffman::showList()
 {
     for (int i = 0; i < chs.n; i++)
