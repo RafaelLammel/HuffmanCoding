@@ -12,7 +12,9 @@ string readFile(char* fileName)
         while ( getline (myfile,line) )
         {
             text += line;
+            text += 13;
         }
+        text.erase(text.end()-1);
         myfile.close();
         return text;
     }

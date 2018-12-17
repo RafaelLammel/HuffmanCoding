@@ -22,6 +22,8 @@ private:
 public:
     Huffman();
     void buildHuffmanTree(std::string text);
+    void createArray(std::string text);
+    void sortArray();
     void showList();
 };
 

@@ -11,6 +11,12 @@ Huffman::Huffman()
 
 void Huffman::buildHuffmanTree(string text)
 {
+    createArray(text);
+    sortArray();
+}
+
+void Huffman::createArray(string text)
+{
     bool inTheList;
     for(int i = 0; i < text.size(); i++)
     {
@@ -30,6 +36,23 @@ void Huffman::buildHuffmanTree(string text)
             chs.element[chs.n].freq++;
             chs.n++;
         }
+    }
+}
+
+void Huffman::sortArray()
+{
+    charElement chosen;
+    int j;
+    for (int i = 1; i < chs.n; i++)
+    {
+        chosen = chs.element[i];
+        j = i - 1;
+        while ((j >= 0) && (chs.element[j].freq < chosen.freq))
+        {
+            chs.element[j+1] = chs.element[j];
+            j--;
+        }
+        chs.element[j+1] = chosen;
     }
 }
 
