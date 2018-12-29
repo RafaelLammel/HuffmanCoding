@@ -56,23 +56,6 @@ void Huffman::sortList()
     }
 }
 
-/** Building the Huffman Tree */
-void Huffman::buildHuffmanTree(string text)
-{
-    createList(text);
-    sortList();
-    while(chs.n > 2)
-    {
-        chs.element[chs.n-2] = createInternalNode(chs.element[chs.n-2],chs.element[chs.n-1]);
-        chs.n--;
-        sortList();
-    }
-    huffmanTree->c = 0;
-    huffmanTree->freq = chs.element[0].freq + chs.element[1].freq;
-    huffmanTree->left = &chs.element[1];
-    huffmanTree->right = &chs.element[0];
-}
-
 /** Creating an internal node */
 node Huffman::createInternalNode(node right, node left)
 {
@@ -92,6 +75,56 @@ node Huffman::createInternalNode(node right, node left)
     n.left = l;
     n.right = r;
     return n;
+}
+
+void Huffman::tableCode(node* tree, string code)
+{
+    string coded;
+    coded += code;
+    if(tree->c != 0)
+    {
+        cout << tree->c << " - " << coded << endl;
+    }
+    if(tree->left!=NULL)
+    {
+        coded+='0';
+        tableCode(tree->left,coded);
+    }
+    coded.pop_back();
+    if(tree->right!=NULL)
+    {
+        coded+='1';
+        tableCode(tree->right,coded);
+    }
+}
+
+/** Building the Huffman Tree */
+void Huffman::buildHuffmanTree(string text)
+{
+    createList(text);
+    sortList();
+    while(chs.n > 2)
+    {
+        chs.element[chs.n-2] = createInternalNode(chs.element[chs.n-2],chs.element[chs.n-1]);
+        chs.n--;
+        sortList();
+    }
+    huffmanTree->c = 0;
+    huffmanTree->freq = chs.element[0].freq + chs.element[1].freq;
+    huffmanTree->left = &chs.element[1];
+    huffmanTree->right = &chs.element[0];
+}
+
+void Huffman::encode()
+{
+    if(chs.n == 0)
+    {
+        cout << "Error in enconding: Please build a tree first! (call the method 'buildHuffmanTree')" << endl;
+    }
+    else
+    {
+        tableCode(huffmanTree,"");
+    }
 }
 
 /** See how is the list; Might be useless later, therefore deleted */

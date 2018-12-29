@@ -12,5 +12,5 @@ int main()
     string text;
     text = readFile((char*)FILE);
     huffman.buildHuffmanTree(text);
-    huffman.showList();
+    huffman.encode();
 }
