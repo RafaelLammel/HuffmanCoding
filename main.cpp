@@ -9,8 +9,17 @@ using namespace std;
 int main()
 {
     Huffman huffman;
-    string text;
-    text = readFile((char*)FILE);
-    huffman.buildHuffmanTree(text);
-    huffman.encode();
+    string original, encoded, decoded;
+    original = readFile((char*)FILE);
+    cout << "Original text:\n\n" << original << "\n\n";
+    encoded = huffman.encode(original);
+    cout << "------------------------------" << "\n\n";
+    huffman.showTable();
+    cout << "------------------------------" << "\n\n";
+    cout << "Encoded text:\n\n";
+    cout << encoded << "\n\n";
+    cout << "------------------------------" << "\n\n";
+    cout << "Decoded text (must be equal to the original):\n\n";
+    decoded = huffman.decode(encoded);
+    cout << decoded << "\n\n";
 }

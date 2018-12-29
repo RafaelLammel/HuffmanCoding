@@ -5,27 +5,40 @@
 #include <string>
 #include <stdlib.h>
 
-struct node{
+struct node
+{
     char c;
     int freq;
     node* left;
     node* right;
 };
 
-struct huffmanList{
+struct huffmanList
+{
     node element[128];
     int n;
 };
 
-class Huffman{
+struct tableCoded
+{
+    char c;
+    std::string code;
+};
+
+class Huffman
+{
 
 private:
     huffmanList chs;
     node *huffmanTree;
+    tableCoded table[128];
+    int tableN;
     /** Creating the list of appearing characters */
     void createList(std::string text);
     /** Insertion sort the list in decreasing order */
     void sortList();
+    /** Building the Huffman Tree */
+    void buildHuffmanTree(std::string text);
     /** Creating an internal node */
     node createInternalNode(node right, node left);
     /** Creating the table of codes */
@@ -33,12 +46,12 @@ private:
 public:
     /** Initializing the list */
     Huffman();
-    /** Building the Huffman Tree */
-    void buildHuffmanTree(std::string text);
-    /** See how is the list; Might be useless later, therefore deleted */
-    void encode();
-    /** See how is the list; Might be useless later, therefore deleted */
-    void showList();
+    /** Encoding the text file based on the table built */
+    std::string encode(std::string text);
+    /** Decoding the text file based on the table built */
+    std::string decode(std::string encodedText);
+    /** Showing the table with the codes */
+    void showTable();
 };
 
 #endif // HUFFMAN_H

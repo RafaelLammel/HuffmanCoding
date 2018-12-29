@@ -56,6 +56,24 @@ void Huffman::sortList()
     }
 }
 
+/** Building the Huffman Tree */
+void Huffman::buildHuffmanTree(string text)
+{
+    createList(text);
+    tableN = 0;
+    sortList();
+    while(chs.n > 2)
+    {
+        chs.element[chs.n-2] = createInternalNode(chs.element[chs.n-2],chs.element[chs.n-1]);
+        chs.n--;
+        sortList();
+    }
+    huffmanTree->c = 0;
+    huffmanTree->freq = chs.element[0].freq + chs.element[1].freq;
+    huffmanTree->left = &chs.element[1];
+    huffmanTree->right = &chs.element[0];
+}
+
 /** Creating an internal node */
 node Huffman::createInternalNode(node right, node left)
 {
@@ -77,13 +95,16 @@ node Huffman::createInternalNode(node right, node left)
     return n;
 }
 
+/** Creating the table of codes */
 void Huffman::tableCode(node* tree, string code)
 {
     string coded;
     coded += code;
     if(tree->c != 0)
     {
-        cout << tree->c << " - " << coded << endl;
+        table[tableN].c = tree->c;
+        table[tableN].code = coded;
+        tableN++;
     }
     if(tree->left!=NULL)
     {
@@ -98,38 +119,53 @@ void Huffman::tableCode(node* tree, string code)
     }
 }
 
-/** Building the Huffman Tree */
-void Huffman::buildHuffmanTree(string text)
+/** Encoding the text file */
+string Huffman::encode(string text)
 {
-    createList(text);
-    sortList();
-    while(chs.n > 2)
-    {
-        chs.element[chs.n-2] = createInternalNode(chs.element[chs.n-2],chs.element[chs.n-1]);
-        chs.n--;
-        sortList();
-    }
-    huffmanTree->c = 0;
-    huffmanTree->freq = chs.element[0].freq + chs.element[1].freq;
-    huffmanTree->left = &chs.element[1];
-    huffmanTree->right = &chs.element[0];
+    string encodedText = "";
+    buildHuffmanTree(text);
+    tableCode(huffmanTree,"");
+    for (int i = 0; i < text.size(); i++)
+        for(int j = 0; j < tableN; j++)
+            if(table[j].c == text[i])
+            {
+                encodedText += table[j].code;
+                break;
+            }
+    return encodedText;
 }
 
-void Huffman::encode()
+string Huffman::decode(string encodedText)
 {
-    if(chs.n == 0)
+    string text = "";
+    string ch;
+    for(int i = 0; i < encodedText.size(); i++)
     {
-        cout << "Error in enconding: Please build a tree first! (call the method 'buildHuffmanTree')" << endl;
+        ch += encodedText[i];
+        for (int j = 0; j < tableN; j++)
+        {
+            if(ch.compare(table[j].code) == 0)
+            {
+                text += table[j].c;
+                ch = "";
+                break;
+            }
+        }
     }
-    else
-    {
-        tableCode(huffmanTree,"");
-    }
+    return text;
 }
 
-/** See how is the list; Might be useless later, therefore deleted */
-void Huffman::showList()
+void Huffman::showTable()
 {
-    for (int i = 0; i < chs.n; i++)
-        cout << "Char: " << chs.element[i].c << " - Freq: " << chs.element[i].freq << endl;
+    cout << "Table of symbols with their codes\n\n";
+    for(int i = 0; i < tableN; i++)
+    {
+        if(table[i].c == '\n')
+            cout << "New line" << " - " << table[i].code << endl;
+        else if(table[i].c == ' ')
+            cout << "Space" << " - " << table[i].code << endl;
+        else
+            cout << table[i].c << " - " << table[i].code << endl;
+    }
+    cout << "\n\n";
 }
